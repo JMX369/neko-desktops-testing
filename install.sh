@@ -84,8 +84,20 @@ apply_desktop_files() {
     # 3. Arreglar los permisos para que el usuario sea el dueño de sus archivos
     chown -R "${target_user}:${target_user}" "${target_home}/"
 
-    # 4. Instalar el paquete de Void Linux de forma segura
-    xbps-install -Sy "${pkg}-${name}"
+    # 4. Instalar los paquetes del escritorio
+    local var_name="PACKAGES_${name^^}"     
+    local packages="${!var_name:-}"         
+
+    if [ -z "$packages" ]; then
+        echo "ERROR: no hay lista de paquetes para '${name}'." >&2
+        return 1
+    fi
+
+    # shellcheck disable=SC2086
+    xbps-install -Syu $packages
+
+	# configurar papirus
+	papirus-folders -C green
 
     # 5. Habilitar servicios base y el Display Manager
     enable_base_services
@@ -99,7 +111,7 @@ TARGET_USER="${2:-}"
 # Si el usuario no especificó el TARGET_USER, le avisamos antes de fallar
 if [ -z "$TARGET_USER" ]; then
     echo "Uso: $0 <entorno> <usuario>"
-    echo "Ejemplo: $0 niri franckey"
+    echo "Ejemplo: $0 niri kyouko"
     exit 1
 fi
 

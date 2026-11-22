@@ -251,7 +251,7 @@ LABWC="
 	gvfs-afc
     gvfs-mtp
     gvfs-smb
-	wdysplays
+	wdisplays
 	xwayland-satellite
 	swaylock
 	labwc
